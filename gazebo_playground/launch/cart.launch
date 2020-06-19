@@ -1,0 +1,10 @@
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find gazebo_playground)/worlds/rodrone.world"/>
+    <!-- more default parameters can be changed here -->
+  </include>
+
+  <!-- Spawn a robot into Gazebo -->
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find cart_description)/urdf/cart.xacro'"/>
+  <node name="cart_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model cart"/>
+</launch>

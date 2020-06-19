@@ -1,0 +1,171 @@
+<?xml version='1.0'?>
+<robot name="cart" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  
+  <link name='chassis'>
+    <pose>0 0 0.5 0 0 0</pose>
+    <inertial>
+      <mass value="15.0"/>
+      <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+      <inertia
+        ixx="15" ixy="0" ixz="0"
+        iyy="15" iyz="0"
+        izz="15" 
+      />
+    </inertial>
+    <collision>
+      <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="0.5 1.0 0.2"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="0.5 1.0 0.2"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="right_wheel">
+    <collision>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.25"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.25"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <mass value="5"/>
+      <inertia
+        ixx=".1" ixy="0.0" ixz="0.0"
+        iyy=".1" iyz="0.0"
+        izz=".1"/>
+    </inertial>
+    <surface>
+        <friction>
+          <ode>
+            <mu>10</mu>
+            <mu2>10</mu2>
+          </ode>
+        </friction>
+      </surface>
+  </link>
+
+  <link name="left_wheel">
+    <collision>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.25"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.25"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <mass value="5"/>
+      <inertia
+        ixx=".1" ixy="0.0" ixz="0.0"
+        iyy=".1" iyz="0.0"
+        izz=".1"/>
+    </inertial>
+    <surface>
+        <friction>
+          <ode>
+            <mu>10</mu>
+            <mu2>10</mu2>
+          </ode>
+        </friction>
+      </surface>
+  </link>
+
+  <link name="front_wheel">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.05"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <sphere radius="0.05"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="5"/>
+      <inertia
+        ixx=".1" ixy="0.0" ixz="0.0"
+        iyy=".1" iyz="0.0"
+        izz=".1"/>
+    </inertial>
+    <surface>
+        <friction>
+          <ode>
+            <mu>0.0</mu>
+            <mu2>0.0</mu2>
+          </ode>
+        </friction>
+      </surface>
+  </link>
+
+  <joint type="continuous" name="right_wheel_hinge">
+    <origin xyz="0.35 -0.35 0" rpy="0 1.57079632679 0"/>
+    <child link="right_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 0 -1"/> 
+  </joint>
+
+  <joint type="continuous" name="left_wheel_hinge">
+    <origin xyz="-0.35 -0.35 0" rpy="0 -1.57079632679 0"/>
+    <child link="left_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 0 1"/> 
+  </joint>
+
+  <joint type="fixed" name="front_wheel_hinge">
+    <origin xyz="0 0.35 -0.2" rpy="0 0 0"/>
+    <child link="front_wheel"/>
+    <parent link="chassis"/>
+    <axis xyz="0 0 0"/> 
+  </joint>
+
+  <transmission name="right_wheel_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_wheel_hinge">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_wheel_motor">
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="left_wheel_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_wheel_hinge">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_wheel_motor">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/cart</robotNamespace>
+      <legacyModeNS>true</legacyModeNS>
+    </plugin>
+  </gazebo>
+
+</robot>

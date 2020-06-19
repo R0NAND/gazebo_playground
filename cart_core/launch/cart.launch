@@ -1,0 +1,6 @@
+<launch>
+  <include file="$(find gazebo_playground)/launch/cart.launch"/>
+  <include file="$(find cart_control)/launch/cart_control.launch"/>
+
+  <node name="cart_core" pkg="cart_core" type="cart_core_node.py" output="screen" />
+</launch>

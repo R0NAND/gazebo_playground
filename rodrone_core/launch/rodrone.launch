@@ -1,5 +1,5 @@
 <launch>
-  <include file="$(find rodrone_gazebo)/launch/rodrone.launch"/>
+  <include file="$(find gazebo_playground)/launch/rodrone.launch"/>
   <include file="$(find rodrone_control)/launch/rodrone_control.launch"/>
 
   <node name="rodrone_core" pkg="rodrone_core" type="rodrone_node" output="screen" />
