@@ -1,9 +1,6 @@
 <?xml version='1.0'?>
 
 <robot name="rodrone" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:include filename="$(find rodrone_description)/urdf/rodrone.gazebo" />
-  <xacro:include filename="$(find rodrone_description)/urdf/materials.xacro" />
-  <xacro:include filename="$(find rodrone_description)/urdf/macros.xacro" />
 
   <link name='center_frame'>
     <pose>0 0 0.1 0 0 0</pose>

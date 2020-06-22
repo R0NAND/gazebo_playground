@@ -5,6 +5,6 @@
   </include>
 
   <!-- Spawn a robot into Gazebo -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find rodrone_description)/urdf/rodrone.xacro'"/>
-  <node name="rodrone_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model rodrone"/>
+  <param name="robot_description" command="$(find xacro)/xacro.py '$(find arm_description)/urdf/arm.xacro'"/>
+  <node name="arm_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param robot_description -model arm"/>
 </launch>

@@ -1,0 +1,227 @@
+<?xml version='1.0'?>
+<robot name="arm" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find arm_description)/urdf/arm.gazebo" />
+  <xacro:include filename="$(find arm_description)/urdf/macros.xacro" />
+
+  <xacro:property name="base_radius" value="0.3" />
+  <xacro:property name="base_height" value="0.1" />
+  <xacro:property name="base_mass" value="100" />
+
+  <xacro:property name="post_radius" value="0.05" />
+  <xacro:property name="post_height" value="0.3" />
+  <xacro:property name="post_mass" value="1" />
+
+  <xacro:property name="elbow_radius" value="0.08" />
+  <xacro:property name="elbow_mass" value="0.3" />
+  
+  <xacro:property name="arm_1_radius" value="0.05" />
+  <xacro:property name="arm_1_length" value="0.5" />
+  <xacro:property name="arm_1_mass" value="1" />
+
+  <xacro:property name="arm_2_radius" value="0.05" />
+  <xacro:property name="arm_2_length" value="0.5" />
+  <xacro:property name="arm_2_mass" value="2" />
+
+  <xacro:property name="finger_thickness" value="0.05" />
+  <xacro:property name="finger_length" value="0.025" />
+  <xacro:property name="finger_mass" value="0.1" />
+
+  
+  
+  <link name='base'>
+    <inertial>
+      <mass value="${base_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:cylinder_inertia m="${base_mass}" r="${base_radius}" h="${base_height}" />
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${base_height}" radius="${base_radius}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${base_height}" radius="${base_radius}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name='post'>
+    <inertial>
+      <mass value="${post_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:cylinder_inertia m="${post_mass}" r="${post_radius}" h="${post_height}" />
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${post_height}" radius="${post_radius}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${post_height}" radius="${post_radius}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name='elbow_1'>
+    <inertial>
+      <mass value="${elbow_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:cylinder_inertia m="${elbow_mass}" r="${elbow_radius}" h="${2 * post_radius}" />
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${2 * post_radius}" radius="${elbow_radius}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${2 * post_radius}" radius="${elbow_radius}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name='arm_1'>
+    <inertial>
+      <mass value="${arm_1_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:cylinder_inertia m="${arm_1_mass}" r="${arm_1_radius}" h="${arm_1_length}" />
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${arm_1_length}" radius="${arm_1_radius}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${arm_1_length}" radius="${arm_1_radius}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name='elbow_2'>
+    <inertial>
+      <mass value="${elbow_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:cylinder_inertia m="${elbow_mass}" r="${elbow_radius}" h="${2 * arm_1_radius}" />
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${2 * arm_1_radius}" radius="${elbow_radius}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${2 * arm_1_radius}" radius="${elbow_radius}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name='arm_2'>
+    <inertial>
+      <mass value="${arm_2_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:cylinder_inertia m="${arm_2_mass}" r="${arm_2_radius}" h="${arm_2_length}" />
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${arm_2_length}" radius="${arm_2_radius}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${arm_2_length}" radius="${arm_2_radius}"/>
+      </geometry>
+    </visual>
+  </link>
+
+
+  <joint type="continuous" name="post_joint">
+    <origin xyz="0 0 ${base_height / 2 + post_height / 2}" rpy="0 0 0"/>
+    <child link="post"/>
+    <parent link="base"/>
+    <axis xyz="0 0 1" /> 
+  </joint>
+
+  <joint type="continuous" name="elbow_1_joint">
+    <origin xyz="0 0 ${post_height / 2 + elbow_radius}" rpy="0 1.57 0"/>
+    <child link="elbow_1"/>
+    <parent link="post"/>
+    <axis xyz="0 0 1"/> 
+  </joint>
+
+  <joint type="fixed" name="arm_1_joint">
+    <origin xyz="0 ${elbow_radius + arm_1_length / 2} 0" rpy="-1.57 0 0"/>
+    <child link="arm_1"/>
+    <parent link="elbow_1"/>
+    <axis xyz="0 0 0"/> 
+  </joint>
+
+  <joint type="continuous" name="elbow_2_joint">
+    <origin xyz="0 0 ${arm_1_length / 2 + elbow_radius}" rpy="1.57 0 0"/>
+    <child link="elbow_2"/>
+    <parent link="arm_1"/>
+    <axis xyz="0 0 1"/> 
+  </joint>
+
+  <joint type="fixed" name="arm_2_joint">
+    <origin xyz="0 ${arm_1_length / 2 + elbow_radius} 0" rpy="-1.57 0 0"/>
+    <child link="arm_2"/>
+    <parent link="elbow_2"/>
+    <axis xyz="0 0 0"/> 
+  </joint>
+
+  <transmission name="post_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="post_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="post_stepper_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="elbow_1_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow_1_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="elbow_1_stepper_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="elbow_2_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow_2_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="elbow_2_stepper_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/arm</robotNamespace>
+      <legacyModeNS>true</legacyModeNS>
+    </plugin>
+  </gazebo>
+
+</robot>

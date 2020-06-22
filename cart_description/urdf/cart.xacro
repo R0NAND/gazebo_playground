@@ -1,51 +1,65 @@
 <?xml version='1.0'?>
 <robot name="cart" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find cart_description)/urdf/cart.gazebo" />
+  <xacro:include filename="$(find cart_description)/urdf/macros.xacro" />
+
+  <xacro:property name="chassis_width" value="0.15" />
+  <xacro:property name="chassis_length" value="0.3" />
+  <xacro:property name="chassis_height" value="0.05" />
+  <xacro:property name="chassis_mass" value="0.5" />
+
+  <xacro:property name="rear_wheel_radius" value="0.05" />
+  <xacro:property name="rear_wheel_thickness" value="0.025" />
+  <xacro:property name="rear_wheel_mass" value="0.1" />
+  <xacro:property name="rear_wheel_buffer" value="0.01" />
+
+  <xacro:property name="front_wheel_radius" value="0.01" />
+  <xacro:property name="front_wheel_mass" value="0.01" />
+
+  <xacro:property name="lidar_height" value="0.05" />
+  <xacro:property name="lidar_diameter" value="0.07" />
+
+  <xacro:property name="camera_length" value="0.03" />
+  
   
   <link name='chassis'>
-    <pose>0 0 0.5 0 0 0</pose>
+    <pose>0 0 0 0 0 0</pose>
     <inertial>
-      <mass value="15.0"/>
-      <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
-      <inertia
-        ixx="15" ixy="0" ixz="0"
-        iyy="15" iyz="0"
-        izz="15" 
-      />
+      <mass value="${chassis_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:box_inertia m="${chassis_mass}" x="${chassis_width}" y="${chassis_length}" z="${chassis_height}" />
     </inertial>
     <collision>
       <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
       <geometry>
-        <box size="0.5 1.0 0.2"/>
+        <box size="${chassis_width} ${chassis_length} ${chassis_height}"/>
       </geometry>
     </collision>
     <visual>
       <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
       <geometry>
-        <box size="0.5 1.0 0.2"/>
+        <box size="${chassis_width} ${chassis_length} ${chassis_height}"/>
       </geometry>
     </visual>
   </link>
 
   <link name="right_wheel">
     <collision>
-      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder length="0.2" radius="0.25"/>
+        <cylinder length="${rear_wheel_thickness}" radius="${rear_wheel_radius}"/>
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder length="0.2" radius="0.25"/>
+        <cylinder length="${rear_wheel_thickness}" radius="${rear_wheel_radius}"/>
       </geometry>
     </visual>
     <inertial>
-      <origin xyz="0 0 0.1" rpy="0 0 0"/>
-      <mass value="5"/>
-      <inertia
-        ixx=".1" ixy="0.0" ixz="0.0"
-        iyy=".1" iyz="0.0"
-        izz=".1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${rear_wheel_mass}"/>
+      <xacro:cylinder_inertia m="${rear_wheel_mass}" r="${rear_wheel_radius}" h="${rear_wheel_thickness}"/>
     </inertial>
     <surface>
         <friction>
@@ -59,24 +73,21 @@
 
   <link name="left_wheel">
     <collision>
-      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder length="0.2" radius="0.25"/>
+        <cylinder length="${rear_wheel_thickness}" radius="${rear_wheel_radius}"/>
       </geometry>
     </collision>
     <visual>
-      <origin xyz="0 0 0.1" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder length="0.2" radius="0.25"/>
+        <cylinder length="${rear_wheel_thickness}" radius="${rear_wheel_radius}"/>
       </geometry>
     </visual>
     <inertial>
-      <origin xyz="0 0 0.1" rpy="0 0 0"/>
-      <mass value="5"/>
-      <inertia
-        ixx=".1" ixy="0.0" ixz="0.0"
-        iyy=".1" iyz="0.0"
-        izz=".1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="${rear_wheel_mass}"/>
+      <xacro:cylinder_inertia m="${rear_wheel_mass}" r="${rear_wheel_radius}" h="${rear_wheel_thickness}"/>
     </inertial>
     <surface>
         <friction>
@@ -89,84 +100,73 @@
   </link>
 
   <link name="right_wheel_hub">
-    <collision>
-      <origin xyz="0 0 0.15" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.1 0.1 0.1"/>
-      </geometry>
-    </collision>
     <visual>
-      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <origin xyz="0 0 0.01" rpy="0 0 0"/>
       <geometry>
-        <box size="0.1 0.1 0.1"/>
+        <box size="${rear_wheel_radius / 2} ${rear_wheel_radius / 2} 0.01"/>
       </geometry>
     </visual>
-    <inertial>
-      <origin xyz="0 0 0.15" rpy="0 0 0"/>
-      <mass value="1"/>
-      <inertia
-        ixx=".001" ixy="0.0" ixz="0.0"
-        iyy=".001" iyz="0.0"
-        izz=".001"/>
-    </inertial>
   </link>
 
   <link name="left_wheel_hub">
-    <collision>
-      <origin xyz="0 0 0.15" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.1 0.1 0.1"/>
-      </geometry>
-    </collision>
     <visual>
-      <origin xyz="0 0 0.15" rpy="0 0 0"/>
+      <origin xyz="0 0 0.01" rpy="0 0 0"/>
       <geometry>
-        <box size="0.1 0.1 0.1"/>
+        <box size="${rear_wheel_radius / 2} ${rear_wheel_radius / 2} 0.01"/>
       </geometry>
     </visual>
-    <inertial>
-      <origin xyz="0 0 0.15" rpy="0 0 0"/>
-      <mass value="1"/>
-      <inertia
-        ixx=".001" ixy="0.0" ixz="0.0"
-        iyy=".001" iyz="0.0"
-        izz=".001"/>
-    </inertial>
   </link>
 
   <link name="front_wheel">
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius="0.05"/>
+        <sphere radius="${front_wheel_radius}"/>
       </geometry>
     </collision>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <sphere radius="0.05"/>
+        <sphere radius="${front_wheel_radius}"/>
       </geometry>
     </visual>
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="5"/>
-      <inertia
-        ixx=".1" ixy="0.0" ixz="0.0"
-        iyy=".1" iyz="0.0"
-        izz=".1"/>
+      <mass value="${front_wheel_mass}"/>
+      <xacro:sphere_inertia m="${front_wheel_mass}" r="${front_wheel_radius}" />
     </inertial>
     <surface>
         <friction>
           <ode>
             <mu>0.0</mu>
             <mu2>0.0</mu2>
+            <slip>1.0</slip>
+            <slip2>1.0</slip2>
           </ode>
         </friction>
       </surface>
   </link>
 
+  <link name='front_camera'>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="${camera_length} ${camera_length} ${camera_length}"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name='lidar'>
+    <visual>
+      <origin xyz="0.0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <cylinder length="${lidar_height}" radius="${lidar_diameter / 2}"/>
+      </geometry>
+    </visual>
+  </link>
+
   <joint type="continuous" name="right_wheel_hinge">
-    <origin xyz="0.35 -0.35 0" rpy="0 1.57079632679 0"/>
+    <origin xyz="${chassis_width / 2 + rear_wheel_thickness / 2 + rear_wheel_buffer} ${-chassis_length / 2 + rear_wheel_radius} ${-chassis_height / 2}" rpy="0 1.57079632679 0"/>
     <child link="right_wheel"/>
     <parent link="chassis"/>
     <axis xyz="0 0 -1"/>
@@ -174,7 +174,7 @@
   </joint>
 
   <joint type="continuous" name="left_wheel_hinge">
-    <origin xyz="-0.35 -0.35 0" rpy="0 -1.57079632679 0"/>
+    <origin xyz="${-(chassis_width / 2 + rear_wheel_thickness / 2 + rear_wheel_buffer)} ${-chassis_length / 2 + rear_wheel_radius} ${-chassis_height / 2}" rpy="0 -1.57079632679 0"/>
     <child link="left_wheel"/>
     <parent link="chassis"/>
     <axis xyz="0 0 1"/>
@@ -182,23 +182,37 @@
   </joint>
 
   <joint type="fixed" name="front_wheel_hinge">
-    <origin xyz="0 0.35 -0.2" rpy="0 0 0"/>
+    <origin xyz="0 ${chassis_length / 2} ${-(chassis_height / 2 + rear_wheel_radius - front_wheel_radius)}" rpy="0 0 0"/>
     <child link="front_wheel"/>
     <parent link="chassis"/>
     <axis xyz="0 0 0"/> 
   </joint>
 
   <joint type="fixed" name="right_hub_bolt">
-    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <origin xyz="0 0 ${rear_wheel_thickness / 2}" rpy="0 0 0"/>
     <child link="right_wheel_hub"/>
     <parent link="right_wheel"/>
     <axis xyz="0 0 0"/> 
   </joint>
 
   <joint type="fixed" name="left_hub_bolt">
-    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+    <origin xyz="0 0 ${rear_wheel_thickness / 2}" rpy="0 0 0"/>
     <child link="left_wheel_hub"/>
     <parent link="left_wheel"/>
+    <axis xyz="0 0 0"/> 
+  </joint>
+
+  <joint type="fixed" name="front_camera_bolt">
+    <origin xyz="0 ${chassis_length / 2 + camera_length / 2} 0" rpy="0 0 1.57"/>
+    <child link="front_camera"/>
+    <parent link="chassis"/>
+    <axis xyz="0 0 0"/> 
+  </joint>
+
+  <joint type="fixed" name="lidar_bolt">
+    <origin xyz="0 0 ${chassis_height / 2 + lidar_height / 2}" rpy="0 0 1.57"/>
+    <child link="lidar"/>
+    <parent link="chassis"/>
     <axis xyz="0 0 0"/> 
   </joint>
 

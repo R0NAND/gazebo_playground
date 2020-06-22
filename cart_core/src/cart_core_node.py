@@ -5,8 +5,8 @@ from std_msgs.msg import Float64
 from sensor_msgs.msg import Joy
 
 def joystick_callback(joystick_data):
-  throttle = -(joystick_data.axes[5] - 1)*10
-  steering = -joystick_data.axes[0]*30
+  throttle = -(joystick_data.axes[5] - 1)*20
+  steering = -joystick_data.axes[0]*60
   right_wheel_pub.publish(throttle - steering)
   left_wheel_pub.publish(throttle + steering)
 
