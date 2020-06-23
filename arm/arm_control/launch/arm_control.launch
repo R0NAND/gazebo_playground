@@ -7,7 +7,9 @@
     output="screen" ns="/arm" args="joint_state_controller 
                                       post_controller
                                       elbow_1_controller
-                                      elbow_2_controller"/>
+                                      elbow_2_controller
+                                      left_finger_controller
+                                      right_finger_controller"/>
 
   <!-- convert joint states to TF transforms for rviz, etc -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"

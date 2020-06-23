@@ -22,8 +22,9 @@
   <xacro:property name="arm_2_length" value="0.5" />
   <xacro:property name="arm_2_mass" value="2" />
 
-  <xacro:property name="finger_thickness" value="0.05" />
-  <xacro:property name="finger_length" value="0.025" />
+  <xacro:property name="finger_thickness" value="0.01" />
+  <xacro:property name="finger_length" value="0.1" />
+  <xacro:property name="grip_width" value="0.1" />
   <xacro:property name="finger_mass" value="0.1" />
 
   
@@ -148,6 +149,80 @@
     </visual>
   </link>
 
+  <link name='left_finger'>
+    <inertial>
+      <mass value="${finger_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:box_inertia m="${finger_mass}" x="${finger_thickness * 3}" y="${finger_thickness}" z="${finger_length}" />
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="${finger_thickness * 3} ${finger_thickness} ${finger_length}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="${finger_thickness * 3} ${finger_thickness} ${finger_length}"/>
+      </geometry>
+    </visual>
+    <surface>
+      <friction>
+        <ode>
+          <mu>10</mu>
+          <mu2>10</mu2>
+        </ode>
+      </friction>
+    </surface>
+  </link>
+
+  <link name='right_finger'>
+    <inertial>
+      <mass value="${finger_mass}"/>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <xacro:box_inertia m="${finger_mass * 3}" x="${finger_thickness}" y="${finger_thickness}" z="${finger_length}" />
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="${finger_thickness * 3} ${finger_thickness} ${finger_length}"/>
+      </geometry>
+    </collision>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="${finger_thickness * 3} ${finger_thickness} ${finger_length}"/>
+      </geometry>
+    </visual>
+    <surface>
+      <friction>
+        <ode>
+          <mu>10</mu>
+          <mu2>10</mu2>
+        </ode>
+      </friction>
+    </surface>
+  </link>
+
+  <link name='arm_lidar'>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name='arm_camera'>
+    <visual>
+      <origin xyz="0 0 0" rpy=" 0 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
 
   <joint type="continuous" name="post_joint">
     <origin xyz="0 0 ${base_height / 2 + post_height / 2}" rpy="0 0 0"/>
@@ -184,6 +259,36 @@
     <axis xyz="0 0 0"/> 
   </joint>
 
+  <joint type="prismatic" name="left_finger_joint">
+    <origin xyz="0 ${- grip_width / 2} ${arm_2_length / 2 + finger_length / 2 + 0.01}" rpy="0 0 0"/>
+    <limit effort="1000000" upper="${grip_width / 2}" lower="0" velocity="10" />
+    <child link="left_finger"/>
+    <parent link="arm_2"/>
+    <axis xyz="0 1 0"/> 
+  </joint>
+
+  <joint type="prismatic" name="right_finger_joint">
+    <origin xyz="0 ${grip_width / 2} ${arm_2_length / 2 + finger_length / 2 + 0.01}" rpy="0 0 0"/>
+    <limit effort="1000000" lower="${-grip_width / 2}" upper="0" velocity="10" />
+    <child link="right_finger"/>
+    <parent link="arm_2"/>
+    <axis xyz="0 1 0"/> 
+  </joint>
+
+  <joint type="fixed" name="lidar_joint">
+    <origin xyz="-0.04 0 ${arm_2_length / 2 + 0.01}" rpy="0 -1.57 0"/>
+    <child link="arm_lidar"/>
+    <parent link="arm_2"/>
+    <axis xyz="0 0 0"/> 
+  </joint>
+
+  <joint type="fixed" name="camera_joint">
+    <origin xyz="0 0 ${arm_2_length / 2 + 0.01}" rpy="0 -1.57 0"/>
+    <child link="arm_camera"/>
+    <parent link="arm_2"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+
   <transmission name="post_transmission">
     <type>transmission_interface/SimpleTransmission</type>
     <joint name="post_joint">
@@ -216,6 +321,30 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
+
+  <transmission name="left_finger_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_finger_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_finger_actuator">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="right_finger_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_finger_joint">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_finger_actuator">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+
 
   <gazebo>
     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">

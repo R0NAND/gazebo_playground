@@ -20,4 +20,14 @@ arm:
     joint: elbow_2_joint
     pid: {p: 100.0, i: 0.0, d: 0.0}
 
+  left_finger_controller:
+    type: effort_controllers/JointPositionController
+    joint: left_finger_joint
+    pid: {p: 100.0, i: 0.0, d: 0.0}
+
+  right_finger_controller:
+    type: effort_controllers/JointPositionController
+    joint: right_finger_joint
+    pid: {p: 100.0, i: 0.0, d: 0.0}
+
 
