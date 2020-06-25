@@ -13,7 +13,7 @@ def joystick_callback(joystick_data):
   twist.angular.x = elbow_1_pos
   twist.angular.y = elbow_2_pos
   twist.angular.z = post_pos
-  twist.linear.x = joystick_data.buttons[5]
+  twist.linear.x = joystick_data.buttons[5]*100
   arm_pub.publish(twist)
 
 def cart_mover():

@@ -170,8 +170,8 @@
     <surface>
       <friction>
         <ode>
-          <mu>10</mu>
-          <mu2>10</mu2>
+          <mu>100</mu>
+          <mu2>100</mu2>
         </ode>
       </friction>
     </surface>
@@ -198,8 +198,8 @@
     <surface>
       <friction>
         <ode>
-          <mu>10</mu>
-          <mu2>10</mu2>
+          <mu>100</mu>
+          <mu2>100</mu2>
         </ode>
       </friction>
     </surface>
@@ -228,6 +228,7 @@
     <origin xyz="0 0 ${base_height / 2 + post_height / 2}" rpy="0 0 0"/>
     <child link="post"/>
     <parent link="base"/>
+    <dynamics damping="0.1" friction="0.1"/>
     <axis xyz="0 0 1" /> 
   </joint>
 
@@ -235,6 +236,7 @@
     <origin xyz="0 0 ${post_height / 2 + elbow_radius}" rpy="0 1.57 0"/>
     <child link="elbow_1"/>
     <parent link="post"/>
+    <dynamics damping="0.1" friction="0.1"/>
     <axis xyz="0 0 1"/> 
   </joint>
 
@@ -249,6 +251,7 @@
     <origin xyz="0 0 ${arm_1_length / 2 + elbow_radius}" rpy="1.57 0 0"/>
     <child link="elbow_2"/>
     <parent link="arm_1"/>
+    <dynamics damping="0.1" friction="0.1"/>
     <axis xyz="0 0 1"/> 
   </joint>
 
