@@ -5,4 +5,5 @@
   <node type="rviz" name="rviz" pkg="rviz" />
   <node name="arm_core" pkg="arm_core" type="arm_core_node.py" output="screen" args="-d $(find arm_core)/rviz/arm_config.rviz"/>
   <node name="xbox" pkg="joy" type="joy_node" respawn="true" />
+  <node name="joy_arm" pkg="joy_arm" type="joy_arm_node.py" output="screen" />
 </launch>

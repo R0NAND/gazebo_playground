@@ -2,18 +2,16 @@
 # license removed for brevity
 import rospy
 from std_msgs.msg import Float64
-from sensor_msgs.msg import Joy
+from geometry_msgs.msg import Twist
 
-def joystick_callback(joystick_data):
-  forward_throttle = -(joystick_data.axes[5] - 1)
-  reverse_throttle = -(joystick_data.axes[4] - 1)
-  throttle = forward_throttle - reverse_throttle
-  steering = -joystick_data.axes[0]*4
+def twist_callback(twist_data):
+  throttle = twist_data.linear.x
+  steering = twist_data.angular.z
   right_wheel_pub.publish(throttle - steering)
   left_wheel_pub.publish(throttle + steering)
 
 def cart_mover():
-  controller_input = rospy.Subscriber("joy", Joy, joystick_callback)
+  driving_input = rospy.Subscriber("/cart/cmd_vel", Twist, twist_callback)
   global right_wheel_pub 
   right_wheel_pub = rospy.Publisher('/cart/right_wheel_controller/command', Float64, queue_size=10)
   global left_wheel_pub 
