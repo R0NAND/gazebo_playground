@@ -4,11 +4,14 @@ import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 
+throttle_coefficient = 20
+steering_coefficient = -40
+
 def joystick_callback(joystick_data):
   forward_throttle = -(joystick_data.axes[5] - 1)
   reverse_throttle = -(joystick_data.axes[2] - 1)
-  throttle = 20*(forward_throttle - reverse_throttle)
-  steering = -40*joystick_data.axes[0]
+  throttle = throttle_coefficient * (forward_throttle - reverse_throttle)
+  steering = steering_coefficient * joystick_data.axes[0]
   twist = Twist()
   twist.linear.x = throttle
   twist.angular.z = steering

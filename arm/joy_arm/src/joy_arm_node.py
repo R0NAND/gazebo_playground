@@ -4,16 +4,19 @@ import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 
+base_angle_coefficient = 0.03 # Radians per second per joystick input
+elbow_angle_coefficient = 0.03 # Radians per second per joystick input
+
 
 def joystick_callback(joystick_data):
-  post_pos = joystick_data.axes[0] * 0.1
-  elbow_1_pos = joystick_data.axes[1] * 0.03
-  elbow_2_pos = joystick_data.axes[4] * 0.03
-  twist = Twist()
-  twist.angular.x = elbow_1_pos
-  twist.angular.y = elbow_2_pos
-  twist.angular.z = post_pos
-  twist.linear.x = joystick_data.buttons[5]*100
+  post_rate = joystick_data.axes[0] * base_angle_coefficient
+  elbow_1_rate = joystick_data.axes[1] * elbow_angle_coefficient
+  elbow_2_rate = joystick_data.axes[4] * elbow_angle_coefficient
+  twist = Twist()  #I am conveniently using the twist message to store the three motor angles, and the gripper value in x
+  twist.angular.x = elbow_1_rate
+  twist.angular.y = elbow_2_rate
+  twist.angular.z = post_rate
+  twist.linear.x = joystick_data.buttons[5] * 100
   arm_pub.publish(twist)
 
 def cart_mover():
